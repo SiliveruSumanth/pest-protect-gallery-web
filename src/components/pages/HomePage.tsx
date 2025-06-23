@@ -2,7 +2,7 @@
 import React from 'react';
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
-import { Truck, CheckCircle, Leaf, Shield as ShieldIcon, Star, Phone, MessageCircle } from "lucide-react";
+import { Truck, CheckCircle, Leaf, Shield as ShieldIcon, Star, Phone, MessageCircle, Calendar } from "lucide-react";
 
 interface HomePageProps {
   onNavigate: (section: string) => void;
@@ -44,11 +44,11 @@ export const HomePage: React.FC<HomePageProps> = ({ onNavigate }) => {
               </Button>
               <Button 
                 size="lg" 
-                variant="outline"
-                className="border-white text-white hover:bg-white hover:text-green-600 text-lg px-8 py-4"
+                className="bg-orange-500 hover:bg-orange-600 text-white text-lg px-10 py-4 font-bold shadow-lg border-2 border-orange-400 transform hover:scale-105 transition-all duration-200"
                 onClick={() => onNavigate('appointment')}
               >
-                Book Appointment
+                <Calendar className="h-6 w-6 mr-2" />
+                BOOK APPOINTMENT NOW
               </Button>
               <Button 
                 size="lg" 
@@ -91,7 +91,7 @@ export const HomePage: React.FC<HomePageProps> = ({ onNavigate }) => {
         </div>
       </section>
 
-      {/* Services Preview with Real Images */}
+      {/* Services Preview with New Images */}
       <section className="py-16 bg-background">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-12">
@@ -102,7 +102,7 @@ export const HomePage: React.FC<HomePageProps> = ({ onNavigate }) => {
             {[
               { 
                 name: 'Cockroach Control', 
-                image: '/lovable-uploads/0ce032b6-9180-4356-861e-4fb1cc5211c4.png',
+                image: '/lovable-uploads/cockroach-control-new.jpg',
                 description: 'Complete elimination with kitchen-safe treatments'
               },
               { 
@@ -112,7 +112,7 @@ export const HomePage: React.FC<HomePageProps> = ({ onNavigate }) => {
               },
               { 
                 name: 'Professional Equipment', 
-                image: '/lovable-uploads/162eefb3-cdc3-43e1-858e-ba5f5f2166a2.png',
+                image: '/lovable-uploads/professional-equipment-new.jpg',
                 description: 'State-of-the-art pest control technology'
               },
               { 

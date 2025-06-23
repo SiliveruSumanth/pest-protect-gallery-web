@@ -13,7 +13,7 @@ export const ServicesPage: React.FC = () => {
     {
       name: 'Kitchen Pest Control',
       icon: Bug,
-      image: '/lovable-uploads/0ce032b6-9180-4356-861e-4fb1cc5211c4.png',
+      image: '/lovable-uploads/cockroach-control-new.jpg',
       description: 'Complete elimination of cockroaches with safe, food-grade treatments for kitchen areas',
       problems: [
         'Ants in containers',
@@ -55,7 +55,7 @@ export const ServicesPage: React.FC = () => {
     {
       name: 'Detailed Inspection',
       icon: Bug,
-      image: '/lovable-uploads/8f49db26-4929-4caa-bad8-202a854b8b2d.png',
+      image: '/lovable-uploads/detailed-inspection-new.png',
       description: 'Comprehensive pest inspection to identify problem areas and entry points',
       problems: [
         'Unknown pest origins',
@@ -76,7 +76,7 @@ export const ServicesPage: React.FC = () => {
     {
       name: 'Cockroach Control',
       icon: Bug,
-      image: '/lovable-uploads/0ce032b6-9180-4356-861e-4fb1cc5211c4.png',
+      image: '/lovable-uploads/cockroach-control-new.jpg',
       description: 'Non-smell gel bait and drain treatment for complete cockroach elimination',
       problems: [
         'Roaches in kitchen & bathroom',
@@ -139,7 +139,7 @@ export const ServicesPage: React.FC = () => {
     {
       name: 'Bed Bugs Removal',
       icon: Bug,
-      image: '/lovable-uploads/bed-bugs-image.jpg',
+      image: '/lovable-uploads/bed-bugs-new.jpg',
       description: 'Thorough bed bug treatment for peaceful, pest-free sleep',
       problems: [
         'Bites and blood spots on bed',
@@ -184,7 +184,7 @@ export const ServicesPage: React.FC = () => {
             <div className="grid md:grid-cols-2 gap-0">
               <div className="relative h-64 md:h-auto">
                 <img 
-                  src="/lovable-uploads/162eefb3-cdc3-43e1-858e-ba5f5f2166a2.png"
+                  src="/lovable-uploads/professional-equipment-new.jpg"
                   alt="Professional pest control equipment"
                   className="w-full h-full object-cover"
                 />
@@ -207,7 +207,7 @@ export const ServicesPage: React.FC = () => {
           </Card>
         </div>
 
-        {/* Service Grid with Images */}
+        {/* Service Grid with Updated Images */}
         <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
           {services.map((service, index) => (
             <Card key={index} className="hover:shadow-lg transition-shadow duration-300 overflow-hidden">
