@@ -29,7 +29,7 @@ export const Navigation: React.FC<NavigationProps> = ({
         <div className="flex justify-between items-center h-16">
           <div className="flex items-center">
             <Shield className="h-8 w-8 text-green-600 mr-2" />
-            <span className="text-xl font-bold text-green-800">Sathavahana Pest Control</span>
+            <span className="text-xl font-bold text-green-800">Quality Pest Control</span>
           </div>
           
           {/* Desktop Menu */}

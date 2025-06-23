@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
@@ -17,7 +16,7 @@ export const HomePage: React.FC<HomePageProps> = ({ onNavigate }) => {
         <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-24">
           <div className="text-center">
             <h1 className="text-4xl md:text-6xl font-bold mb-6">
-              Sathavahana Pest Control Services
+              Quality Pest Control Services
             </h1>
             <p className="text-xl md:text-2xl mb-8 text-green-100">
               Professional, eco-friendly pest control solutions for Telangana and Andhra Pradesh
@@ -37,7 +36,7 @@ export const HomePage: React.FC<HomePageProps> = ({ onNavigate }) => {
       <section className="py-16 bg-gray-50">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-12">
-            <h2 className="text-3xl font-bold text-gray-900 mb-4">Why Choose Sathavahana Pest Control?</h2>
+            <h2 className="text-3xl font-bold text-gray-900 mb-4">Why Choose Quality Pest Control?</h2>
             <p className="text-lg text-gray-600">We deliver exceptional service with guaranteed results</p>
           </div>
           <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-8">
@@ -205,7 +204,7 @@ export const HomePage: React.FC<HomePageProps> = ({ onNavigate }) => {
               {
                 name: "Venkat Reddy",
                 rating: 5,
-                review: "Highly recommend Sathavahana Pest Control. Great customer service and effective pest solutions."
+                review: "Highly recommend Quality Pest Control. Great customer service and effective pest solutions."
               }
             ].map((testimonial, index) => (
               <Card key={index}>
