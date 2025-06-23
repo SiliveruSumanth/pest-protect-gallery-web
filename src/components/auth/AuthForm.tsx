@@ -23,7 +23,7 @@ export const AuthForm: React.FC<AuthFormProps> = ({ onAuthSuccess, onGuestAccess
       onAuthSuccess();
       toast({
         title: "Login Successful",
-        description: "Welcome back to Sathavahana Pest Control!",
+        description: "Welcome back to Quality Pest Control!",
       });
     } else {
       toast({
@@ -48,7 +48,7 @@ export const AuthForm: React.FC<AuthFormProps> = ({ onAuthSuccess, onGuestAccess
       onAuthSuccess();
       toast({
         title: "Account Created",
-        description: "Welcome to Sathavahana Pest Control!",
+        description: "Welcome to Quality Pest Control!",
       });
     }
   };
@@ -59,7 +59,7 @@ export const AuthForm: React.FC<AuthFormProps> = ({ onAuthSuccess, onGuestAccess
         <CardHeader className="text-center">
           <div className="flex items-center justify-center mb-4">
             <Shield className="h-8 w-8 text-green-600 mr-2" />
-            <h1 className="text-2xl font-bold text-green-800">Sathavahana</h1>
+            <h1 className="text-2xl font-bold text-green-800">Quality Pest Control</h1>
           </div>
           <CardTitle>Protect Your Home</CardTitle>
           <CardDescription>Professional pest control services you can trust</CardDescription>

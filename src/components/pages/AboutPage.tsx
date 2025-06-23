@@ -8,9 +8,9 @@ export const AboutPage: React.FC = () => {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="grid md:grid-cols-2 gap-12 items-center">
           <div>
-            <h2 className="text-3xl font-bold text-gray-900 mb-6">About Sathavahana Pest Control Services</h2>
+            <h2 className="text-3xl font-bold text-gray-900 mb-6">About Quality Pest Control Services</h2>
             <p className="text-lg text-gray-600 mb-6">
-              With over 15 years of experience serving Telangana and Andhra Pradesh, Sathavahana Pest Control Services is your trusted partner in maintaining pest-free environments. Our team of certified professionals uses the latest eco-friendly techniques to ensure effective and safe pest control solutions.
+              With over 15 years of experience serving Telangana and Andhra Pradesh, Quality Pest Control Services is your trusted partner in maintaining pest-free environments. Our team of certified professionals uses the latest eco-friendly techniques to ensure effective and safe pest control solutions.
             </p>
             <p className="text-lg text-gray-600 mb-8">
               We are committed to customer satisfaction and safety, building long-term relationships through exceptional service, transparent pricing, and guaranteed results. Our comprehensive approach covers residential, commercial, and industrial pest control needs across both states.

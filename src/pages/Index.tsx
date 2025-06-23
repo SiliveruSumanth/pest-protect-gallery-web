@@ -30,6 +30,16 @@ const Index = () => {
   };
 
   const navigateToSection = (section: string) => {
+    // Check if user is trying to access contact form without authentication
+    if (section === 'contact' && !isAuthenticated) {
+      setShowAuth(true);
+      toast({
+        title: "Login Required",
+        description: "Please log in to access the contact form.",
+        variant: "destructive",
+      });
+      return;
+    }
     setCurrentView(section);
   };
 
@@ -60,7 +70,7 @@ const Index = () => {
       {currentView === 'services' && <ServicesPage />}
       {currentView === 'gallery' && <GalleryPage />}
       {currentView === 'appointment' && <AppointmentPage />}
-      {currentView === 'contact' && <ContactPage />}
+      {currentView === 'contact' && <ContactPage isAuthenticated={isAuthenticated} />}
 
       <Footer onNavigate={navigateToSection} />
     </div>
