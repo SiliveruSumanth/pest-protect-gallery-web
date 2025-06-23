@@ -1,13 +1,22 @@
+
 import React from 'react';
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
-import { Truck, CheckCircle, Leaf, Shield as ShieldIcon, Star, ArrowRight } from "lucide-react";
+import { Truck, CheckCircle, Leaf, Shield as ShieldIcon, Star, Phone, MessageCircle } from "lucide-react";
 
 interface HomePageProps {
   onNavigate: (section: string) => void;
 }
 
 export const HomePage: React.FC<HomePageProps> = ({ onNavigate }) => {
+  const handleCallNow = () => {
+    window.open('tel:+919492309305', '_self');
+  };
+
+  const handleWhatsApp = () => {
+    window.open('https://wa.me/919492309305?text=Hello%2C%20I%20visited%20your%20website%20Quality%20Pest%20Control%20Services%20and%20would%20like%20to%20know%20more%20about%20your%20pest%20control%20solutions.', '_blank');
+  };
+
   return (
     <>
       {/* Hero Section */}
@@ -18,26 +27,48 @@ export const HomePage: React.FC<HomePageProps> = ({ onNavigate }) => {
             <h1 className="text-4xl md:text-6xl font-bold mb-6">
               Quality Pest Control Services
             </h1>
-            <p className="text-xl md:text-2xl mb-8 text-green-100">
+            <p className="text-xl md:text-2xl mb-4 text-green-100">
+              Protecting Your Home, Preserving Your Peace.
+            </p>
+            <p className="text-lg mb-8 text-green-100">
               Professional, eco-friendly pest control solutions for Telangana and Andhra Pradesh
             </p>
-            <Button 
-              size="lg" 
-              className="bg-white text-green-600 hover:bg-gray-100 text-lg px-8 py-4"
-              onClick={() => onNavigate('contact')}
-            >
-              Get Free Inspection
-            </Button>
+            <div className="flex flex-col sm:flex-row gap-4 justify-center">
+              <Button 
+                size="lg" 
+                className="bg-white text-green-600 hover:bg-gray-100 text-lg px-8 py-4"
+                onClick={handleCallNow}
+              >
+                <Phone className="h-5 w-5 mr-2" />
+                Call Now
+              </Button>
+              <Button 
+                size="lg" 
+                variant="outline"
+                className="border-white text-white hover:bg-white hover:text-green-600 text-lg px-8 py-4"
+                onClick={() => onNavigate('appointment')}
+              >
+                Book Appointment
+              </Button>
+              <Button 
+                size="lg" 
+                className="bg-green-500 hover:bg-green-600 text-lg px-8 py-4"
+                onClick={handleWhatsApp}
+              >
+                <MessageCircle className="h-5 w-5 mr-2" />
+                WhatsApp Us
+              </Button>
+            </div>
           </div>
         </div>
       </section>
 
       {/* Why Choose Us Section */}
-      <section className="py-16 bg-gray-50">
+      <section className="py-16 bg-muted/50">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-12">
-            <h2 className="text-3xl font-bold text-gray-900 mb-4">Why Choose Quality Pest Control?</h2>
-            <p className="text-lg text-gray-600">We deliver exceptional service with guaranteed results</p>
+            <h2 className="text-3xl font-bold text-foreground mb-4">Why Choose Quality Pest Control?</h2>
+            <p className="text-lg text-muted-foreground">We deliver exceptional service with guaranteed results</p>
           </div>
           <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-8">
             {[
@@ -48,11 +79,11 @@ export const HomePage: React.FC<HomePageProps> = ({ onNavigate }) => {
             ].map((feature, index) => (
               <Card key={index} className="text-center hover:shadow-lg transition-shadow duration-300">
                 <CardContent className="p-6">
-                  <div className="bg-green-100 rounded-full w-16 h-16 flex items-center justify-center mx-auto mb-4">
+                  <div className="bg-green-100 dark:bg-green-900 rounded-full w-16 h-16 flex items-center justify-center mx-auto mb-4">
                     <feature.icon className="h-8 w-8 text-green-600" />
                   </div>
                   <h3 className="text-xl font-semibold mb-2">{feature.title}</h3>
-                  <p className="text-gray-600">{feature.description}</p>
+                  <p className="text-muted-foreground">{feature.description}</p>
                 </CardContent>
               </Card>
             ))}
@@ -61,11 +92,11 @@ export const HomePage: React.FC<HomePageProps> = ({ onNavigate }) => {
       </section>
 
       {/* Services Preview with Real Images */}
-      <section className="py-16 bg-white">
+      <section className="py-16 bg-background">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-12">
-            <h2 className="text-3xl font-bold text-gray-900 mb-4">Our Pest Control Services</h2>
-            <p className="text-lg text-gray-600">Professional solutions with proven results</p>
+            <h2 className="text-3xl font-bold text-foreground mb-4">Our Pest Control Services</h2>
+            <p className="text-lg text-muted-foreground">Professional solutions with proven results</p>
           </div>
           <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
             {[
@@ -103,7 +134,7 @@ export const HomePage: React.FC<HomePageProps> = ({ onNavigate }) => {
                   </div>
                 </div>
                 <CardContent className="p-4">
-                  <p className="text-gray-600 text-sm">{service.description}</p>
+                  <p className="text-muted-foreground text-sm">{service.description}</p>
                 </CardContent>
               </Card>
             ))}
@@ -116,78 +147,12 @@ export const HomePage: React.FC<HomePageProps> = ({ onNavigate }) => {
         </div>
       </section>
 
-      {/* Before & After Results Section */}
-      <section className="py-16 bg-gray-50">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center mb-12">
-            <h2 className="text-3xl font-bold text-gray-900 mb-4">Real Results, Real Impact</h2>
-            <p className="text-lg text-gray-600">See the effectiveness of our professional pest control treatments</p>
-          </div>
-          <div className="grid md:grid-cols-2 gap-8">
-            {[
-              {
-                title: "Foundation Protection",
-                beforeImage: "/lovable-uploads/65c5f08f-08cf-47c4-b1b3-c271fad06a41.png",
-                afterImage: "/lovable-uploads/b482c87c-ac2d-4d5e-bc95-50022a20fc98.png",
-                description: "Complete termite elimination and prevention treatment"
-              },
-              {
-                title: "Kitchen Pest Control",
-                beforeImage: "/lovable-uploads/8f49db26-4929-4caa-bad8-202a854b8b2d.png",
-                afterImage: "/lovable-uploads/0ce032b6-9180-4356-861e-4fb1cc5211c4.png",
-                description: "Thorough cockroach and kitchen pest elimination"
-              }
-            ].map((result, index) => (
-              <Card key={index} className="overflow-hidden">
-                <CardContent className="p-6">
-                  <div className="text-center mb-4">
-                    <h3 className="text-xl font-bold">{result.title}</h3>
-                    <p className="text-gray-600">{result.description}</p>
-                  </div>
-                  <div className="grid grid-cols-2 gap-4">
-                    <div className="text-center">
-                      <p className="text-sm font-semibold text-red-600 mb-2">Before Treatment</p>
-                      <div className="relative overflow-hidden rounded-lg">
-                        <img 
-                          src={result.beforeImage}
-                          alt="Before treatment"
-                          className="w-full h-32 object-cover"
-                        />
-                        <div className="absolute top-2 left-2 bg-red-600 text-white px-2 py-1 rounded text-xs">
-                          Problem
-                        </div>
-                      </div>
-                    </div>
-                    <div className="text-center">
-                      <p className="text-sm font-semibold text-green-600 mb-2">After Treatment</p>
-                      <div className="relative overflow-hidden rounded-lg">
-                        <img 
-                          src={result.afterImage}
-                          alt="After treatment"
-                          className="w-full h-32 object-cover"
-                        />
-                        <div className="absolute top-2 left-2 bg-green-600 text-white px-2 py-1 rounded text-xs">
-                          Solved
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                  <div className="flex items-center justify-center mt-4">
-                    <ArrowRight className="h-6 w-6 text-green-600" />
-                  </div>
-                </CardContent>
-              </Card>
-            ))}
-          </div>
-        </div>
-      </section>
-
       {/* Testimonials Section */}
-      <section className="py-16 bg-gray-50">
+      <section className="py-16 bg-muted/50">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-12">
-            <h2 className="text-3xl font-bold text-gray-900 mb-4">Customer Testimonials</h2>
-            <p className="text-lg text-gray-600">What our satisfied customers say about us</p>
+            <h2 className="text-3xl font-bold text-foreground mb-4">Customer Testimonials</h2>
+            <p className="text-lg text-muted-foreground">What our satisfied customers say about us</p>
           </div>
           <div className="grid md:grid-cols-3 gap-8">
             {[
@@ -214,8 +179,8 @@ export const HomePage: React.FC<HomePageProps> = ({ onNavigate }) => {
                       <Star key={i} className="h-5 w-5 text-yellow-400 fill-current" />
                     ))}
                   </div>
-                  <p className="text-gray-600 mb-4">"{testimonial.review}"</p>
-                  <p className="font-semibold text-gray-900">- {testimonial.name}</p>
+                  <p className="text-muted-foreground mb-4">"{testimonial.review}"</p>
+                  <p className="font-semibold text-foreground">- {testimonial.name}</p>
                 </CardContent>
               </Card>
             ))}
