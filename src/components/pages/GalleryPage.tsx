@@ -3,11 +3,11 @@ import React from 'react';
 
 export const GalleryPage: React.FC = () => {
   return (
-    <section className="py-16 bg-gray-50">
+    <section className="py-16 bg-muted/50">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="text-center mb-12">
-          <h2 className="text-3xl font-bold text-gray-900 mb-4">Our Work Gallery</h2>
-          <p className="text-lg text-gray-600">See our professional pest control services in action</p>
+          <h2 className="text-3xl font-bold text-foreground mb-4">Our Work Gallery</h2>
+          <p className="text-lg text-muted-foreground">See our professional pest control services in action</p>
         </div>
         <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
           {[
@@ -18,7 +18,7 @@ export const GalleryPage: React.FC = () => {
             { src: '/lovable-uploads/b482c87c-ac2d-4d5e-bc95-50022a20fc98.png', title: 'Foundation Treatment', description: 'Pre-construction pest prevention' },
             { src: '/lovable-uploads/65c5f08f-08cf-47c4-b1b3-c271fad06a41.png', title: 'Termite Problem', description: 'Before treatment - termite infestation' },
           ].map((image, index) => (
-            <div key={index} className="group relative overflow-hidden rounded-lg shadow-md hover:shadow-xl transition-shadow duration-300">
+            <div key={index} className="group relative overflow-hidden rounded-lg shadow-md hover:shadow-xl transition-shadow duration-300 bg-card">
               <img 
                 src={image.src}
                 alt={image.title}

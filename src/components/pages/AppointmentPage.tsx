@@ -44,11 +44,11 @@ export const AppointmentPage: React.FC = () => {
   };
 
   return (
-    <section className="py-16 bg-white">
+    <section className="py-16 bg-background">
       <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="text-center mb-12">
-          <h2 className="text-3xl font-bold text-gray-900 mb-4">Book an Appointment</h2>
-          <p className="text-lg text-gray-600">Schedule your pest control service today</p>
+          <h2 className="text-3xl font-bold text-foreground mb-4">Book an Appointment</h2>
+          <p className="text-lg text-muted-foreground">Schedule your pest control service today</p>
         </div>
         <Card>
           <CardContent className="p-8">
