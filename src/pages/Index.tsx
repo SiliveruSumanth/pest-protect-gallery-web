@@ -10,6 +10,7 @@ import { ContactPage } from '@/components/pages/ContactPage';
 import { Footer } from '@/components/layout/Footer';
 import { WhatsAppButton } from '@/components/ui/whatsapp-button';
 import { ThemeProvider } from '@/components/theme/ThemeProvider';
+import { useScrollPreservation } from '@/hooks/useScrollPreservation';
 
 const Index = () => {
   const [currentView, setCurrentView] = useState('home');
@@ -17,6 +18,12 @@ const Index = () => {
   const navigateToSection = (section: string) => {
     setCurrentView(section);
   };
+
+  // Initialize scroll preservation
+  useScrollPreservation({
+    currentView,
+    onNavigate: navigateToSection
+  });
 
   return (
     <ThemeProvider>
