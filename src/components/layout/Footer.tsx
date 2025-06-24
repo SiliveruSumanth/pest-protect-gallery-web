@@ -1,6 +1,6 @@
 
 import React from 'react';
-import { Shield, Youtube, Phone, MessageCircle } from "lucide-react";
+import { Shield, Youtube, Phone, MessageCircle, MapPin } from "lucide-react";
 
 interface FooterProps {
   onNavigate: (section: string) => void;
@@ -9,6 +9,10 @@ interface FooterProps {
 export const Footer: React.FC<FooterProps> = ({ onNavigate }) => {
   const handleWhatsApp = () => {
     window.open('https://wa.me/919492309305?text=Hello%2C%20I%20visited%20your%20website%20Quality%20Pest%20Control%20Services%20and%20would%20like%20to%20know%20more%20about%20your%20pest%20control%20solutions.', '_blank');
+  };
+
+  const handleOfficeLocation = () => {
+    window.open('https://maps.app.goo.gl/8MpyNDkYeHgAG3mB9', '_blank');
   };
 
   return (
@@ -48,6 +52,15 @@ export const Footer: React.FC<FooterProps> = ({ onNavigate }) => {
                   +91 8555913912
                 </a>
               </li>
+              <li>
+                <button
+                  onClick={handleOfficeLocation}
+                  className="text-blue-400 hover:text-blue-300 transition-colors flex items-center"
+                >
+                  <MapPin className="h-4 w-4 mr-2" />
+                  Visit Our Office
+                </button>
+              </li>
               <li className="text-muted-foreground">Warangal, Telangana</li>
             </ul>
           </div>
@@ -74,7 +87,7 @@ export const Footer: React.FC<FooterProps> = ({ onNavigate }) => {
           </div>
         </div>
         <div className="border-t border-border mt-8 pt-8 text-center">
-          <p>&copy; 2024 Quality Pest Control Services. All rights reserved.</p>
+          <p>&copy; 2008 Quality Pest Control Services. All rights reserved.</p>
         </div>
       </div>
     </footer>
