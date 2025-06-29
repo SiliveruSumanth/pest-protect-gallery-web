@@ -60,8 +60,8 @@ const handler = async (req: Request): Promise<Response> => {
 
     // Send email notification to owner
     const emailResponse = await resend.emails.send({
-      from: "Pest Control <onboarding@resend.dev>",
-      to: ["owner@pestcontrol.com"], // Replace with actual owner email
+      from: "Quality Pest Control <onboarding@resend.dev>",
+      to: ["qualitypestcontrolservices1@gmail.com"],
       subject: "New Appointment Booking",
       html: `
         <h1>New Appointment Booking</h1>
