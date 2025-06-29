@@ -8,6 +8,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Textarea } from "@/components/ui/textarea";
 import { Calendar } from "lucide-react";
 import { toast } from "@/hooks/use-toast";
+import { supabase } from "@/integrations/supabase/client";
 
 export const AppointmentPage: React.FC = () => {
   const [appointmentForm, setAppointmentForm] = useState({
@@ -18,14 +19,49 @@ export const AppointmentPage: React.FC = () => {
     preferredDate: '',
     preferredTime: ''
   });
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
-  const handleAppointmentSubmit = (e: React.FormEvent) => {
+  const handleAppointmentSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (appointmentForm.name && appointmentForm.phone && appointmentForm.address && appointmentForm.pestType) {
+    
+    if (!appointmentForm.name || !appointmentForm.phone || !appointmentForm.address || !appointmentForm.pestType) {
       toast({
-        title: "Appointment Booked",
-        description: "We'll contact you soon to confirm your appointment!",
+        title: "Error",
+        description: "Please fill in all required fields",
+        variant: "destructive",
       });
+      return;
+    }
+
+    setIsSubmitting(true);
+
+    try {
+      console.log('Submitting appointment:', appointmentForm);
+
+      const { data, error } = await supabase.functions.invoke('send-appointment-email', {
+        body: {
+          name: appointmentForm.name,
+          phone: appointmentForm.phone,
+          address: appointmentForm.address,
+          pestType: appointmentForm.pestType,
+          preferredDate: appointmentForm.preferredDate || undefined,
+          preferredTime: appointmentForm.preferredTime || undefined,
+        }
+      });
+
+      if (error) {
+        console.error('Edge function error:', error);
+        throw error;
+      }
+
+      console.log('Appointment booked successfully:', data);
+
+      toast({
+        title: "Appointment Booked Successfully!",
+        description: "We've received your appointment request and will contact you soon to confirm.",
+      });
+
+      // Reset form
       setAppointmentForm({
         name: '',
         phone: '',
@@ -34,12 +70,16 @@ export const AppointmentPage: React.FC = () => {
         preferredDate: '',
         preferredTime: ''
       });
-    } else {
+
+    } catch (error: any) {
+      console.error('Error booking appointment:', error);
       toast({
-        title: "Error",
-        description: "Please fill in all required fields",
+        title: "Booking Failed",
+        description: "There was an error booking your appointment. Please try again or contact us directly.",
         variant: "destructive",
       });
+    } finally {
+      setIsSubmitting(false);
     }
   };
 
@@ -62,6 +102,7 @@ export const AppointmentPage: React.FC = () => {
                     value={appointmentForm.name}
                     onChange={(e) => setAppointmentForm({...appointmentForm, name: e.target.value})}
                     required
+                    disabled={isSubmitting}
                   />
                 </div>
                 <div>
@@ -72,6 +113,7 @@ export const AppointmentPage: React.FC = () => {
                     value={appointmentForm.phone}
                     onChange={(e) => setAppointmentForm({...appointmentForm, phone: e.target.value})}
                     required
+                    disabled={isSubmitting}
                   />
                 </div>
               </div>
@@ -84,12 +126,17 @@ export const AppointmentPage: React.FC = () => {
                   value={appointmentForm.address}
                   onChange={(e) => setAppointmentForm({...appointmentForm, address: e.target.value})}
                   required
+                  disabled={isSubmitting}
                 />
               </div>
 
               <div>
                 <Label htmlFor="pestType">Type of Pest Problem *</Label>
-                <Select onValueChange={(value) => setAppointmentForm({...appointmentForm, pestType: value})}>
+                <Select 
+                  onValueChange={(value) => setAppointmentForm({...appointmentForm, pestType: value})}
+                  disabled={isSubmitting}
+                  value={appointmentForm.pestType}
+                >
                   <SelectTrigger>
                     <SelectValue placeholder="Select pest type" />
                   </SelectTrigger>
@@ -114,11 +161,16 @@ export const AppointmentPage: React.FC = () => {
                     type="date"
                     value={appointmentForm.preferredDate}
                     onChange={(e) => setAppointmentForm({...appointmentForm, preferredDate: e.target.value})}
+                    disabled={isSubmitting}
                   />
                 </div>
                 <div>
                   <Label htmlFor="time">Preferred Time</Label>
-                  <Select onValueChange={(value) => setAppointmentForm({...appointmentForm, preferredTime: value})}>
+                  <Select 
+                    onValueChange={(value) => setAppointmentForm({...appointmentForm, preferredTime: value})}
+                    disabled={isSubmitting}
+                    value={appointmentForm.preferredTime}
+                  >
                     <SelectTrigger>
                       <SelectValue placeholder="Select time" />
                     </SelectTrigger>
@@ -131,9 +183,13 @@ export const AppointmentPage: React.FC = () => {
                 </div>
               </div>
 
-              <Button type="submit" className="w-full bg-green-600 hover:bg-green-700 text-lg py-3">
+              <Button 
+                type="submit" 
+                className="w-full bg-green-600 hover:bg-green-700 text-lg py-3"
+                disabled={isSubmitting}
+              >
                 <Calendar className="mr-2 h-5 w-5" />
-                Book Appointment
+                {isSubmitting ? 'Booking Appointment...' : 'Book Appointment'}
               </Button>
             </form>
           </CardContent>
