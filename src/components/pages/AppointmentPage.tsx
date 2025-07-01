@@ -9,6 +9,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { Calendar } from "lucide-react";
 import { toast } from "@/hooks/use-toast";
 import { supabase } from "@/integrations/supabase/client";
+import { sanitizeFormData, isValidPhone, RateLimiter } from "@/lib/security";
 
 export const AppointmentPage: React.FC = () => {
   const [appointmentForm, setAppointmentForm] = useState({
@@ -20,11 +21,27 @@ export const AppointmentPage: React.FC = () => {
     preferredTime: ''
   });
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const rateLimiter = new RateLimiter(2, 600000); // 2 requests per 10 minutes
 
   const handleAppointmentSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     
-    if (!appointmentForm.name || !appointmentForm.phone || !appointmentForm.address || !appointmentForm.pestType) {
+    // Rate limiting check
+    const userIdentifier = `appointment_${appointmentForm.phone || 'anonymous'}`;
+    if (!rateLimiter.isAllowed(userIdentifier)) {
+      const remainingTime = Math.ceil(rateLimiter.getRemainingTime(userIdentifier) / 1000 / 60);
+      toast({
+        title: "Too Many Requests",
+        description: `Please wait ${remainingTime} minutes before booking another appointment.`,
+        variant: "destructive",
+      });
+      return;
+    }
+
+    // Input validation and sanitization
+    const sanitizedData = sanitizeFormData(appointmentForm);
+    
+    if (!sanitizedData.name || !sanitizedData.phone || !sanitizedData.address || !sanitizedData.pestType) {
       toast({
         title: "Error",
         description: "Please fill in all required fields",
@@ -33,25 +50,34 @@ export const AppointmentPage: React.FC = () => {
       return;
     }
 
+    if (!isValidPhone(sanitizedData.phone)) {
+      toast({
+        title: "Invalid Phone",
+        description: "Please enter a valid phone number.",
+        variant: "destructive",
+      });
+      return;
+    }
+
     setIsSubmitting(true);
 
     try {
-      console.log('Submitting appointment:', appointmentForm);
+      console.log('Submitting appointment (sanitized):', sanitizedData);
 
       const { data, error } = await supabase.functions.invoke('send-appointment-email', {
         body: {
-          name: appointmentForm.name,
-          phone: appointmentForm.phone,
-          address: appointmentForm.address,
-          pestType: appointmentForm.pestType,
-          preferredDate: appointmentForm.preferredDate || undefined,
-          preferredTime: appointmentForm.preferredTime || undefined,
+          name: sanitizedData.name,
+          phone: sanitizedData.phone,
+          address: sanitizedData.address,
+          pestType: sanitizedData.pestType,
+          preferredDate: sanitizedData.preferredDate || undefined,
+          preferredTime: sanitizedData.preferredTime || undefined,
         }
       });
 
       if (error) {
         console.error('Edge function error:', error);
-        throw error;
+        throw new Error('Booking failed');
       }
 
       console.log('Appointment booked successfully:', data);
@@ -75,7 +101,7 @@ export const AppointmentPage: React.FC = () => {
       console.error('Error booking appointment:', error);
       toast({
         title: "Booking Failed",
-        description: "There was an error booking your appointment. Please try again or contact us directly.",
+        description: "An error occurred while booking. Please try again or contact us directly.",
         variant: "destructive",
       });
     } finally {

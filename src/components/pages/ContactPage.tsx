@@ -7,6 +7,7 @@ import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { Phone, Mail, MapPin, MessageCircle } from "lucide-react";
 import { toast } from "@/hooks/use-toast";
+import { sanitizeFormData, isValidEmail, isValidPhone, RateLimiter } from "@/lib/security";
 
 export const ContactPage: React.FC = () => {
   const [formData, setFormData] = useState({
@@ -17,6 +18,7 @@ export const ContactPage: React.FC = () => {
     message: ''
   });
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const rateLimiter = new RateLimiter(3, 300000); // 3 requests per 5 minutes
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     const { name, value } = e.target;
@@ -28,11 +30,44 @@ export const ContactPage: React.FC = () => {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    
+    // Rate limiting check
+    const userIdentifier = `contact_${formData.email || 'anonymous'}`;
+    if (!rateLimiter.isAllowed(userIdentifier)) {
+      const remainingTime = Math.ceil(rateLimiter.getRemainingTime(userIdentifier) / 1000 / 60);
+      toast({
+        title: "Too Many Requests",
+        description: `Please wait ${remainingTime} minutes before submitting again.`,
+        variant: "destructive",
+      });
+      return;
+    }
+
+    // Input validation and sanitization
+    const sanitizedData = sanitizeFormData(formData);
+    
+    if (!isValidEmail(sanitizedData.email)) {
+      toast({
+        title: "Invalid Email",
+        description: "Please enter a valid email address.",
+        variant: "destructive",
+      });
+      return;
+    }
+
+    if (!isValidPhone(sanitizedData.phone)) {
+      toast({
+        title: "Invalid Phone",
+        description: "Please enter a valid phone number.",
+        variant: "destructive",
+      });
+      return;
+    }
+
     setIsSubmitting(true);
 
     try {
-      // For now, we'll simulate the form submission
-      console.log('Form submission:', formData);
+      console.log('Form submission (sanitized):', sanitizedData);
       
       // Simulate API call delay
       await new Promise(resolve => setTimeout(resolve, 1000));
@@ -54,7 +89,7 @@ export const ContactPage: React.FC = () => {
       console.error('Error submitting form:', error);
       toast({
         title: "Error",
-        description: "Failed to submit the form. Please try again.",
+        description: "An error occurred. Please try again later.",
         variant: "destructive",
       });
     } finally {
