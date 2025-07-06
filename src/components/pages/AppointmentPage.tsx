@@ -15,6 +15,7 @@ export const AppointmentPage: React.FC = () => {
   const [appointmentForm, setAppointmentForm] = useState({
     name: '',
     phone: '',
+    email: '',
     address: '',
     pestType: '',
     preferredDate: '',
@@ -68,6 +69,7 @@ export const AppointmentPage: React.FC = () => {
         body: {
           name: sanitizedData.name,
           phone: sanitizedData.phone,
+          email: sanitizedData.email,
           address: sanitizedData.address,
           pestType: sanitizedData.pestType,
           preferredDate: sanitizedData.preferredDate || undefined,
@@ -91,6 +93,7 @@ export const AppointmentPage: React.FC = () => {
       setAppointmentForm({
         name: '',
         phone: '',
+        email: '',
         address: '',
         pestType: '',
         preferredDate: '',
@@ -142,6 +145,21 @@ export const AppointmentPage: React.FC = () => {
                     disabled={isSubmitting}
                   />
                 </div>
+              </div>
+              
+              <div>
+                <Label htmlFor="email">Email Address (Optional)</Label>
+                <Input
+                  id="email"
+                  type="email"
+                  placeholder="your@email.com"
+                  value={appointmentForm.email}
+                  onChange={(e) => setAppointmentForm({...appointmentForm, email: e.target.value})}
+                  disabled={isSubmitting}
+                />
+                <p className="text-sm text-muted-foreground mt-1">
+                  Provide your email to receive booking confirmation
+                </p>
               </div>
               
               <div>

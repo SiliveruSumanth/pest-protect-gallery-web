@@ -59,6 +59,7 @@ const checkRateLimit = (identifier: string): boolean => {
 interface AppointmentEmailRequest {
   name: string;
   phone: string;
+  email?: string;
   address: string;
   pestType: string;
   preferredDate?: string;
@@ -73,7 +74,7 @@ const handler = async (req: Request): Promise<Response> => {
 
   try {
     const body = await req.json();
-    const { name, phone, address, pestType, preferredDate, preferredTime }: AppointmentEmailRequest = body;
+    const { name, phone, email, address, pestType, preferredDate, preferredTime }: AppointmentEmailRequest = body;
 
     // Rate limiting
     const clientIP = req.headers.get('cf-connecting-ip') || req.headers.get('x-forwarded-for') || 'unknown';
@@ -115,6 +116,7 @@ const handler = async (req: Request): Promise<Response> => {
     const sanitizedData = {
       name: sanitizeInput(name),
       phone: sanitizeInput(phone),
+      email: email ? sanitizeInput(email) : undefined,
       address: sanitizeInput(address),
       pestType: sanitizeInput(pestType),
       preferredDate: preferredDate ? sanitizeInput(preferredDate) : undefined,
@@ -158,7 +160,7 @@ const handler = async (req: Request): Promise<Response> => {
     console.log('Appointment saved to database:', appointment);
 
     // Send email notification to owner
-    const emailResponse = await resend.emails.send({
+    const ownerEmailResponse = await resend.emails.send({
       from: "Quality Pest Control <onboarding@resend.dev>",
       to: ["qualitypestcontrolservices1@gmail.com"],
       subject: "New Appointment Booking",
@@ -178,12 +180,44 @@ const handler = async (req: Request): Promise<Response> => {
       `,
     });
 
-    console.log("Email sent successfully:", emailResponse);
+    console.log("Owner email sent successfully:", ownerEmailResponse);
+
+    // Send confirmation email to customer (if valid email is provided)
+    let customerEmailResponse = null;
+    if (sanitizedData.email && isValidEmail(sanitizedData.email)) {
+      try {
+        customerEmailResponse = await resend.emails.send({
+          from: "Quality Pest Control <onboarding@resend.dev>",
+          to: [sanitizedData.email],
+          subject: "Appointment Booking Confirmation - Quality Pest Control",
+          html: `
+            <h1>Thank you for booking with Quality Pest Control!</h1>
+            <p>Dear ${sanitizedData.name},</p>
+            <p>We have received your appointment request with the following details:</p>
+            <ul>
+              <li><strong>Pest Type:</strong> ${sanitizedData.pestType}</li>
+              <li><strong>Address:</strong> ${sanitizedData.address}</li>
+              ${sanitizedData.preferredDate ? `<li><strong>Preferred Date:</strong> ${sanitizedData.preferredDate}</li>` : ''}
+              ${sanitizedData.preferredTime ? `<li><strong>Preferred Time:</strong> ${sanitizedData.preferredTime}</li>` : ''}
+            </ul>
+            <p><strong>What's Next?</strong></p>
+            <p>Our team will contact you within 24 hours at <strong>${sanitizedData.phone}</strong> to confirm your appointment details and schedule the service.</p>
+            <p>For immediate assistance, please call us at +91 9492309305</p>
+            <p>Thank you for choosing Quality Pest Control!</p>
+            <p>Best regards,<br>Quality Pest Control Team</p>
+          `,
+        });
+        console.log("Customer confirmation email sent:", customerEmailResponse);
+      } catch (emailError) {
+        console.log("Customer email failed:", emailError);
+      }
+    }
 
     return new Response(JSON.stringify({ 
       success: true, 
       appointmentId: appointment.id,
-      emailId: emailResponse.id 
+      ownerEmailId: ownerEmailResponse.id,
+      customerEmailId: customerEmailResponse?.id || null
     }), {
       status: 200,
       headers: {
