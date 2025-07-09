@@ -1,10 +1,9 @@
 
 import React, { useState } from 'react';
 import { Button } from "@/components/ui/button";
-import { Shield, Menu, X, User, LogOut } from "lucide-react";
+import { Shield, Menu, X } from "lucide-react";
 import { ThemeToggle } from '@/components/theme/ThemeToggle';
 import { YoutubeIcon } from '@/components/ui/youtube-icon';
-import { useAuth } from '@/hooks/useAuth';
 
 interface NavigationProps {
   currentView: string;
@@ -16,15 +15,9 @@ export const Navigation: React.FC<NavigationProps> = ({
   onNavigate
 }) => {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
-  const { user, signOut } = useAuth();
 
   const navigateToSection = (section: string) => {
     onNavigate(section);
-    setMobileMenuOpen(false);
-  };
-
-  const handleSignOut = async () => {
-    await signOut();
     setMobileMenuOpen(false);
   };
 
@@ -53,23 +46,6 @@ export const Navigation: React.FC<NavigationProps> = ({
           <div className="hidden md:flex items-center space-x-3">
             <YoutubeIcon />
             <ThemeToggle />
-            {user && (
-              <div className="flex items-center space-x-2">
-                <div className="flex items-center space-x-2 px-3 py-1 bg-green-50 dark:bg-green-900/20 rounded-full">
-                  <User className="h-4 w-4 text-green-600" />
-                  <span className="text-sm text-green-600 font-medium">{user.email}</span>
-                </div>
-                <Button
-                  variant="outline"
-                  size="sm"
-                  onClick={handleSignOut}
-                  className="flex items-center space-x-1"
-                >
-                  <LogOut className="h-4 w-4" />
-                  <span>Sign Out</span>
-                </Button>
-              </div>
-            )}
           </div>
 
           {/* Mobile menu button */}
@@ -96,21 +72,6 @@ export const Navigation: React.FC<NavigationProps> = ({
               <button onClick={() => navigateToSection('gallery')} className="block px-3 py-2 text-base font-medium text-foreground hover:text-green-600 hover:bg-accent w-full text-left">Gallery</button>
               <button onClick={() => navigateToSection('appointment')} className="block px-3 py-2 text-base font-medium text-foreground hover:text-green-600 hover:bg-accent w-full text-left">Appointment</button>
               <button onClick={() => navigateToSection('contact')} className="block px-3 py-2 text-base font-medium text-foreground hover:text-green-600 hover:bg-accent w-full text-left">Contact</button>
-              {user && (
-                <div className="border-t pt-2">
-                  <div className="flex items-center space-x-2 px-3 py-2 bg-green-50 dark:bg-green-900/20 rounded-lg mx-1">
-                    <User className="h-4 w-4 text-green-600" />
-                    <span className="text-sm text-green-600 font-medium">{user.email}</span>
-                  </div>
-                  <button
-                    onClick={handleSignOut}
-                    className="flex items-center space-x-2 px-3 py-2 text-base font-medium text-foreground hover:text-green-600 hover:bg-accent w-full text-left mt-1"
-                  >
-                    <LogOut className="h-4 w-4" />
-                    <span>Sign Out</span>
-                  </button>
-                </div>
-              )}
             </div>
           </div>
         )}

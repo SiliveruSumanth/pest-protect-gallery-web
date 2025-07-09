@@ -1,23 +1,21 @@
 
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Card, CardContent } from "@/components/ui/card";
 import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Textarea } from "@/components/ui/textarea";
-import { Calendar, LogOut, User } from "lucide-react";
+import { Calendar } from "lucide-react";
 import { toast } from "@/hooks/use-toast";
 import { supabase } from "@/integrations/supabase/client";
 import { sanitizeFormData, isValidPhone, RateLimiter } from "@/lib/security";
-import { useAuth } from "@/hooks/useAuth";
 
 export const AppointmentPage: React.FC = () => {
-  const { user, signOut } = useAuth();
   const [appointmentForm, setAppointmentForm] = useState({
     name: '',
     phone: '',
-    email: user?.email || '',
+    email: '',
     address: '',
     pestType: '',
     preferredDate: '',
@@ -25,20 +23,6 @@ export const AppointmentPage: React.FC = () => {
   });
   const [isSubmitting, setIsSubmitting] = useState(false);
   const rateLimiter = new RateLimiter(2, 600000); // 2 requests per 10 minutes
-
-  // Update email field when user changes
-  useEffect(() => {
-    if (user?.email) {
-      setAppointmentForm(prev => ({
-        ...prev,
-        email: user.email
-      }));
-    }
-  }, [user]);
-
-  const handleSignOut = async () => {
-    await signOut();
-  };
 
   const handleAppointmentSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -105,11 +89,11 @@ export const AppointmentPage: React.FC = () => {
         description: "We've received your appointment request and will contact you soon to confirm.",
       });
 
-      // Reset form but keep email
+      // Reset form
       setAppointmentForm({
         name: '',
         phone: '',
-        email: user?.email || '',
+        email: '',
         address: '',
         pestType: '',
         preferredDate: '',
@@ -131,32 +115,6 @@ export const AppointmentPage: React.FC = () => {
   return (
     <section className="py-16 bg-background">
       <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8">
-        {/* User Header */}
-        <div className="mb-8">
-          <Card>
-            <CardContent className="p-4">
-              <div className="flex items-center justify-between">
-                <div className="flex items-center space-x-3">
-                  <User className="h-5 w-5 text-green-600" />
-                  <div>
-                    <p className="text-sm font-medium">Logged in as</p>
-                    <p className="text-sm text-muted-foreground">{user?.email}</p>
-                  </div>
-                </div>
-                <Button 
-                  variant="outline" 
-                  size="sm" 
-                  onClick={handleSignOut}
-                  className="flex items-center space-x-2"
-                >
-                  <LogOut className="h-4 w-4" />
-                  <span>Sign Out</span>
-                </Button>
-              </div>
-            </CardContent>
-          </Card>
-        </div>
-
         <div className="text-center mb-12">
           <h2 className="text-3xl font-bold text-foreground mb-4">Book an Appointment</h2>
           <p className="text-lg text-muted-foreground">Schedule your pest control service today</p>
