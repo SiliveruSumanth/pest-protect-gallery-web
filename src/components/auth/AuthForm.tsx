@@ -7,35 +7,55 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Label } from "@/components/ui/label";
 import { Shield } from "lucide-react";
 import { toast } from "@/hooks/use-toast";
+import { supabase } from "@/integrations/supabase/client";
 
 interface AuthFormProps {
   onAuthSuccess: () => void;
-  onGuestAccess: () => void;
 }
 
-export const AuthForm: React.FC<AuthFormProps> = ({ onAuthSuccess, onGuestAccess }) => {
+export const AuthForm: React.FC<AuthFormProps> = ({ onAuthSuccess }) => {
   const [loginForm, setLoginForm] = useState({ email: '', password: '' });
   const [signupForm, setSignupForm] = useState({ name: '', email: '', password: '', confirmPassword: '' });
+  const [isLoading, setIsLoading] = useState(false);
 
-  const handleLogin = (e: React.FormEvent) => {
+  const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (loginForm.email && loginForm.password) {
-      onAuthSuccess();
+    setIsLoading(true);
+    
+    try {
+      const { error } = await supabase.auth.signInWithPassword({
+        email: loginForm.email,
+        password: loginForm.password,
+      });
+
+      if (error) {
+        toast({
+          title: "Login Failed",
+          description: error.message,
+          variant: "destructive",
+        });
+        return;
+      }
+
       toast({
         title: "Login Successful",
         description: "Welcome back to Quality Pest Control!",
       });
-    } else {
+      onAuthSuccess();
+    } catch (error: any) {
       toast({
         title: "Login Failed",
-        description: "Please enter valid credentials",
+        description: "An unexpected error occurred. Please try again.",
         variant: "destructive",
       });
+    } finally {
+      setIsLoading(false);
     }
   };
 
-  const handleSignup = (e: React.FormEvent) => {
+  const handleSignup = async (e: React.FormEvent) => {
     e.preventDefault();
+    
     if (signupForm.password !== signupForm.confirmPassword) {
       toast({
         title: "Signup Failed",
@@ -44,12 +64,56 @@ export const AuthForm: React.FC<AuthFormProps> = ({ onAuthSuccess, onGuestAccess
       });
       return;
     }
-    if (signupForm.name && signupForm.email && signupForm.password) {
-      onAuthSuccess();
+
+    if (signupForm.password.length < 6) {
+      toast({
+        title: "Signup Failed",
+        description: "Password must be at least 6 characters long",
+        variant: "destructive",
+      });
+      return;
+    }
+
+    setIsLoading(true);
+    
+    try {
+      const { error } = await supabase.auth.signUp({
+        email: signupForm.email,
+        password: signupForm.password,
+        options: {
+          emailRedirectTo: `${window.location.origin}/`,
+          data: {
+            name: signupForm.name,
+          },
+        },
+      });
+
+      if (error) {
+        toast({
+          title: "Signup Failed",
+          description: error.message,
+          variant: "destructive",
+        });
+        return;
+      }
+
       toast({
         title: "Account Created",
-        description: "Welcome to Quality Pest Control!",
+        description: "Please check your email to verify your account.",
       });
+      
+      // Switch to login tab after successful signup
+      const loginTab = document.querySelector('[data-value="login"]') as HTMLElement;
+      if (loginTab) loginTab.click();
+      
+    } catch (error: any) {
+      toast({
+        title: "Signup Failed",
+        description: "An unexpected error occurred. Please try again.",
+        variant: "destructive",
+      });
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -95,8 +159,8 @@ export const AuthForm: React.FC<AuthFormProps> = ({ onAuthSuccess, onGuestAccess
                     required
                   />
                 </div>
-                <Button type="submit" className="w-full bg-green-600 hover:bg-green-700">
-                  Login
+                <Button type="submit" className="w-full bg-green-600 hover:bg-green-700" disabled={isLoading}>
+                  {isLoading ? "Logging in..." : "Login"}
                 </Button>
               </form>
             </TabsContent>
@@ -146,18 +210,12 @@ export const AuthForm: React.FC<AuthFormProps> = ({ onAuthSuccess, onGuestAccess
                     required
                   />
                 </div>
-                <Button type="submit" className="w-full bg-green-600 hover:bg-green-700">
-                  Create Account
+                <Button type="submit" className="w-full bg-green-600 hover:bg-green-700" disabled={isLoading}>
+                  {isLoading ? "Creating Account..." : "Create Account"}
                 </Button>
               </form>
             </TabsContent>
           </Tabs>
-          
-          <div className="mt-6 text-center">
-            <Button variant="outline" onClick={onGuestAccess} className="w-full">
-              Continue Without Login
-            </Button>
-          </div>
         </CardContent>
       </Card>
     </div>
